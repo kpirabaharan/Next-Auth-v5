@@ -1,7 +1,7 @@
-import Image from 'next/image';
-
 const Home = () => {
-  return <p>Hello Auth</p>;
+  return (
+    <main className='flex h-full flex-col items-center justify-center'></main>
+  );
 };
 
 export default Home;
