@@ -1,12 +1,12 @@
 'use server';
 
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import * as z from 'zod';
 
 import { db } from '@/db';
 import { users } from '@/db/schema';
 import { RegisterSchema } from '@/schemas/form-schema';
-import { eq } from 'drizzle-orm';
+import { getUserByEmail } from 'data/user';
 
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
   const validatedFields = RegisterSchema.safeParse(values);
@@ -20,9 +20,7 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
   const { name, email, password } = validatedFields.data;
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const existingUser = await db.query.users.findFirst({
-    where: eq(users.email, email),
-  });
+  const existingUser = await getUserByEmail(email);
 
   if (existingUser) {
     return {
