@@ -1,22 +1,21 @@
-import { drizzle } from 'drizzle-orm/node-postgres';
-import { Client } from 'pg';
+import { drizzle } from 'drizzle-orm/postgres-js';
+import postgres from 'postgres';
 
 import * as schema from '@/db/schema';
 
 declare global {
-  var drizzle: Client | undefined;
+  var drizzle: postgres.Sql<{}> | undefined;
 }
 
 const createNewClient = () => {
-  const client = new Client({
+  const client = postgres({
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     database: process.env.DB_NAME,
-    user: process.env.DB_USER,
+    username: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
   });
 
-  client.connect();
   return client;
 };
 
