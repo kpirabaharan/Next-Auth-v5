@@ -38,3 +38,6 @@ next-env.d.ts
 
 # DB
 data/db
+
+# Drizzle
+drizzle/

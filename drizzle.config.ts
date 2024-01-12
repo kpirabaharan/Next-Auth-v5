@@ -1,13 +1,14 @@
-import 'dotenv/config';
 import type { Config } from 'drizzle-kit';
+
 export default {
-  schema: './src/schema.ts',
+  schema: './src/db/schema.ts',
   out: './drizzle',
-  driver: 'mysql2', // 'pg' | 'mysql2' | 'better-sqlite' | 'libsql' | 'turso'
+  driver: 'pg',
   dbCredentials: {
     host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    database: process.env.DB_NAME,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
   },
 } satisfies Config;
