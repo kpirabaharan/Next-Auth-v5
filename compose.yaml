@@ -5,6 +5,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    depends_on:
+      - db
+    env_file:
+      - .env
     environment:
       NODE_ENV: development
     ports:
@@ -22,3 +26,34 @@ services:
         - path: .
           target: /usr/src/app
           action: sync
+
+  db:
+    image: postgres
+    pull_policy: if_not_present
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - 5432:5432
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+
+  db-migrations:
+    build:
+      context: .
+      dockerfile: Dockerfile.migrations
+    env_file:
+      - .env
+    depends_on:
+      - db
+    profiles:
+      - migration
+
+  adminer:
+    image: adminer
+    pull_policy: if_not_present
+    depends_on:
+      - db
+    ports:
+      - 8080:8080
